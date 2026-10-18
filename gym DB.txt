@@ -1,0 +1,226 @@
+drop table member;
+drop table membership_plan;
+drop table membership;
+drop table trainer;
+drop table fitness_class;
+drop table class_booking;
+drop table payment;
+---------------------------------------------------------------------------------
+create table member(
+member_id number constraint pk_member primary key,
+full_name varchar2(100),
+email varchar2(100),
+phone varchar2(20),
+join_date date,
+city varchar2 (100)
+);
+
+create table membership_plan(
+plan_id number constraint pk_membership_plan primary key,
+plan_name varchar2(100),
+duration_months number,
+price number(10,2)
+);
+
+create table membership(
+membership_id number constraint pk_membership primary key,
+member_id number constraint fk_membership_member REFERENCES member(member_id),
+plan_id number constraint fk_membership_membership_plan REFERENCES membership_plan(plan_id),
+start_date date,
+end_date date,
+membership_status varchar2(100)
+);
+
+create table trainer(
+trainer_id number constraint pk_trainer primary key,
+full_name varchar2(100),
+specialization varchar2(100),
+hire_date date
+);
+
+create table fitness_class(
+class_id number constraint pk_fitness_class primary key,
+class_name varchar2(100),
+trainer_id number constraint fk_fitness_class_trainer references trainer(trainer_id),
+capacity number,
+scheduled_at timestamp
+);
+
+create table class_booking(
+booking_id number constraint pk_class_booking primary key,
+member_id number constraint fk_class_booking_member references member(member_id),
+class_id number constraint fk_class_booking_fitness_class references fitness_class(class_id),
+booking_date date,
+attendance_status varchar2(100)
+); 
+
+create table payment(
+payment_id number constraint pk_payment primary key,
+membership_id number constraint fk_payment_membership references membership(membership_id),
+payment_date date,
+amount number(10,2),
+payment_method varchar2(50),
+payment_status varchar2(50)
+);
+--------------------------------------------------------------------------------
+INSERT INTO member VALUES (1, 'Ahmed Mohamed', 'ahmed@gmail.com', '01012345678', DATE '2025-01-10', 'Cairo');
+INSERT INTO member VALUES (2, 'Mohamed Ali', 'mohamed@gmail.com', '01012345679', DATE '2025-02-15', 'Giza');
+INSERT INTO member VALUES (3, 'Omar Hassan', 'omar@gmail.com', '01012345680', DATE '2025-03-20', 'Alexandria');
+INSERT INTO member VALUES (4, 'Ali Mahmoud', 'ali@gmail.com', '01012345681', DATE '2025-04-05', 'Cairo');
+INSERT INTO member VALUES (5, 'Youssef Samir', 'youssef@gmail.com', '01012345682', DATE '2025-05-12', 'Mansoura');
+INSERT INTO member VALUES (6, 'Mahmoud Adel', 'mahmoud@gmail.com', '01012345683', DATE '2025-06-18', 'Giza');
+INSERT INTO member VALUES (7, 'Mostafa Ibrahim', 'mostafa@gmail.com', '01012345684', DATE '2025-07-22', 'Tanta');
+INSERT INTO member VALUES (8, 'Khaled Tarek', 'khaled@gmail.com', '01012345685', DATE '2025-08-09', 'Cairo');
+INSERT INTO member VALUES (9, 'Amr Nabil', 'amr@gmail.com', '01012345686', DATE '2025-09-14', 'Zagazig');
+INSERT INTO member VALUES (10, 'Karim Ashraf', 'karim@gmail.com', '01012345687', DATE '2025-10-01', 'Ismailia');
+INSERT INTO member VALUES (11, 'Omar Hassan', 'omar.hassan@email.com', '01012345678', DATE '2026-01-10', 'Zagazig');
+INSERT INTO member VALUES (12, 'Sara Ali', 'sara.ali@email.com', NULL, DATE '2026-03-15', 'Cairo');
+INSERT INTO member VALUES (13, 'Mona Khaled', NULL, NULL, DATE '2026-08-20', 'Mansoura');
+--------------------------
+INSERT INTO membership_plan VALUES (1, 'Monthly', 1, 500);
+INSERT INTO membership_plan VALUES (2, 'Quarterly', 3, 1350);
+INSERT INTO membership_plan VALUES (3, 'Half Year', 6, 2500);
+INSERT INTO membership_plan VALUES (4, 'Annual', 12, 4500);
+INSERT INTO membership_plan VALUES (5, 'Student Monthly', 1, 350);
+INSERT INTO membership_plan VALUES (6, 'Student Annual', 12, 3500);
+INSERT INTO membership_plan VALUES (7, 'Premium Monthly', 1, 800);
+INSERT INTO membership_plan VALUES (8, 'Premium Quarterly', 3, 2200);
+INSERT INTO membership_plan VALUES (9, 'VIP Annual', 12, 6000);
+INSERT INTO membership_plan VALUES (10, 'Family Annual', 12, 7500);
+--------------------------
+INSERT INTO membership VALUES (1, 1, 1, DATE '2025-01-10', DATE '2025-02-10', 'Expired');
+INSERT INTO membership VALUES (2, 2, 2, DATE '2025-02-15', DATE '2025-05-15', 'Expired');
+INSERT INTO membership VALUES (3, 3, 3, DATE '2025-03-20', DATE '2025-09-20', 'Expired');
+INSERT INTO membership VALUES (4, 4, 4, DATE '2025-04-05', DATE '2026-04-05', 'Expired');
+INSERT INTO membership VALUES (5, 5, 5, DATE '2026-01-12', DATE '2026-02-12', 'Expired');
+INSERT INTO membership VALUES (6, 6, 6, DATE '2026-02-18', DATE '2027-02-18', 'Active');
+INSERT INTO membership VALUES (7, 7, 7, DATE '2026-03-22', DATE '2026-04-22', 'Expired');
+INSERT INTO membership VALUES (8, 8, 8, DATE '2026-08-09', DATE '2026-11-09', 'Active');
+INSERT INTO membership VALUES (9, 1, 9, DATE '2026-09-14', DATE '2027-09-14', 'Active');
+INSERT INTO membership VALUES (10, 2, 10, DATE '2026-10-01', DATE '2027-10-01', 'Pending');
+-------------------------
+INSERT INTO trainer VALUES (1, 'John Smith', 'Bodybuilding', DATE '2022-01-15');
+INSERT INTO trainer VALUES (2, 'David Brown', 'Yoga', DATE '2021-06-10');
+INSERT INTO trainer VALUES (3, 'Michael Wilson', 'Cardio', DATE '2023-03-20');
+INSERT INTO trainer VALUES (4, 'James Taylor', 'CrossFit', DATE '2020-09-05');
+INSERT INTO trainer VALUES (5, 'Robert Davis', 'Swimming', DATE '2022-11-12');
+INSERT INTO trainer VALUES (6, 'Daniel Miller', 'Boxing', DATE '2024-02-01');
+INSERT INTO trainer VALUES (7, 'William Moore', 'Pilates', DATE '2023-07-18');
+INSERT INTO trainer VALUES (8, 'Thomas Anderson', 'Weightlifting', DATE '2021-04-25');
+INSERT INTO trainer VALUES (9, 'Chris Martin', 'Kickboxing', DATE '2024-05-14');
+INSERT INTO trainer VALUES (10, 'Peter Jackson', 'Fitness', DATE '2025-01-10');
+---------------------------
+INSERT INTO fitness_class VALUES (1, 'Morning Yoga', 2, 20, TIMESTAMP '2026-10-20 09:00:00');
+INSERT INTO fitness_class VALUES (2, 'Advanced Bodybuilding', 1, 15, TIMESTAMP '2026-10-20 11:00:00');
+INSERT INTO fitness_class VALUES (3, 'Cardio Blast', 3, 25, TIMESTAMP '2026-10-21 10:00:00');
+INSERT INTO fitness_class VALUES (4, 'CrossFit Training', 4, 12, TIMESTAMP '2026-10-21 16:00:00');
+INSERT INTO fitness_class VALUES (5, 'Swimming Basics', 5, 10, TIMESTAMP '2026-10-22 08:00:00');
+INSERT INTO fitness_class VALUES (6, 'Boxing Fitness', 6, 15, TIMESTAMP '2026-10-22 18:00:00');
+INSERT INTO fitness_class VALUES (7, 'Pilates Session', 7, 20, TIMESTAMP '2026-10-23 12:00:00');
+INSERT INTO fitness_class VALUES (8, 'Weightlifting', 8, 10, TIMESTAMP '2026-10-23 15:00:00');
+INSERT INTO fitness_class VALUES (9, 'Kickboxing', 9, 12, TIMESTAMP '2026-10-24 17:00:00');
+INSERT INTO fitness_class VALUES (10, 'General Fitness', NULL, 30, TIMESTAMP '2026-10-24 19:00:00');
+----------------------------
+INSERT INTO class_booking VALUES (1, 1, 1, DATE '2026-10-10', 'Attended');
+INSERT INTO class_booking VALUES (2, 1, 2, DATE '2026-10-11', 'Attended');
+INSERT INTO class_booking VALUES (3, 2, 1, DATE '2026-10-12', 'Absent');
+INSERT INTO class_booking VALUES (4, 3, 3, DATE '2026-10-12', 'Attended');
+INSERT INTO class_booking VALUES (5, 4, 4, DATE '2026-10-13', 'Booked');
+INSERT INTO class_booking VALUES (6, 5, 5, DATE '2026-10-13', 'Attended');
+INSERT INTO class_booking VALUES (7, 6, 6, DATE '2026-10-14', 'Booked');
+INSERT INTO class_booking VALUES (8, 7, 7, DATE '2026-10-14', 'Absent');
+INSERT INTO class_booking VALUES (9, 8, 8, DATE '2026-10-15', 'Attended');
+INSERT INTO class_booking VALUES (10, 9, 9, DATE '2026-10-15', 'Booked');
+INSERT INTO class_booking VALUES (11, null, null, DATE '2026-10-10', 'Booked');
+----------------------------
+INSERT INTO payment VALUES (1, 1, DATE '2025-01-10', 500, 'Cash', 'Successful');
+INSERT INTO payment VALUES (2, 2, DATE '2025-02-15', 1350, 'Credit Card', 'Successful');
+INSERT INTO payment VALUES (3, 3, DATE '2025-03-20', 2500, 'Bank Transfer', 'Successful');
+INSERT INTO payment VALUES (4, 4, DATE '2025-04-05', 4500, 'Credit Card', 'Successful');
+INSERT INTO payment VALUES (5, 5, DATE '2026-01-12', 350, 'Cash', 'Failed');
+INSERT INTO payment VALUES (6, 6, DATE '2026-02-18', 3500, 'Credit Card', 'Successful');
+INSERT INTO payment VALUES (7, 8, DATE '2026-08-09', 2200, 'Bank Transfer', 'Pending');
+INSERT INTO payment VALUES (8, 9, DATE '2026-09-14', 3000, 'Cash', 'Successful');
+INSERT INTO payment VALUES (9, 10, DATE '2026-10-01', 7500, 'Credit Card', 'Failed');
+INSERT INTO payment VALUES (10, 1, DATE '2026-10-10', 6000, 'Bank Transfer', 'Successful');
+
+commit;
+------------------1------------------------------------------------------------------------------
+select s.membership_id, m.full_name, p.plan_name, start_date, membership_status  from membership s 
+join member m on m.member_id=s.member_id
+join membership_plan p on p.plan_id=s.plan_id
+order by membership_id;
+--------------------2-----------------------------------------------------------------------------
+select m.member_id, m.full_name,s.membership_id,s.membership_status from member m 
+left join membership s on m.member_id = s.member_id;
+---------------------3----------------------------------------------------------------------------
+select * from class_booking c 
+right join  fitness_class f  on f.class_id = c.class_id;
+-----------------------4--------------------------------------------------------------------------
+select * from trainer t
+left join fitness_class f on t.trainer_id = f.trainer_id;
+-----------------------5--------------------------------------------------------------------------
+select  p.plan_name, count(s.membership_id) as total_memberships, avg(p.price)as avg_price from membership_plan p 
+join membership s on p.plan_id=s.plan_id
+group by p.plan_name
+order by avg_price desc;
+--------------------------6---------------------------------------------------------------------------
+select m.full_name,count(b.member_id) as "number of class"  from member m 
+left join class_booking b on m.member_id = b.member_id 
+group by full_name
+order by "number of class" desc , full_name asc;
+---------------------------7----------------------------------------------------------------------------
+select  m.plan_name,sum(amount) as "total revenue"  from membership s
+join payment p on s.membership_id = p.membership_id
+join membership_plan m on s.plan_id = m.plan_id
+where lower(p.payment_status) = 'successful'
+group by m.plan_name
+order by "total revenue" desc;
+-----------------------------8------------------------------------------------------------------------
+select f.class_id, f.class_name,count(c.class_id) as "number of booking"  from fitness_class f 
+left join class_booking c on f.class_id = c.class_id
+group by f.class_id, f.class_name
+order by "number of booking" desc;
+-------------------------------9----------------------------------------------------------------------
+select membership_id,
+case 
+when membership_status = 'Active' then 'active member'
+when membership_status = 'Expired' then 'expired member'
+when membership_status = 'pending' then 'pending member'
+end AS status_label
+from membership
+order by membership_id;
+---------------------------------10---------------------------------------------------------------------
+select full_name, coalesce(phone, email,'no contact details') AS contact_value  from member;
+------------------------------11------------------------------------------------------------------------
+select s.membership_id,nvl(sum(p.amount), 0) as "total amount"  from membership s
+left join payment p on s.membership_id = p.membership_id
+group by s.membership_id
+order by s.membership_id;
+--------------------------------12-------------------------------------------------------------------------
+select t.full_name ,count(fc.class_id) as total_classes from trainer t
+left join fitness_class fc on t.trainer_id = fc.trainer_id
+group by t.trainer_id, t.full_name
+order by total_classes desc;
+-----------------------------------13---------------------------------------------------------------------
+select payment_id, membership_id, payment_method, amount, payment_date,
+case
+when payment_status = 'Successful' then 'Completed'
+when payment_status = 'Pending' then 'Pending'
+when payment_status = 'Failed'  then 'Not completed'
+end as status_label
+from payment
+order by payment_date desc;
+--------------------------------------14--------------------------------------------------------------------
+SELECT payment_method, SUM(amount) AS total_amount,round(AVG(amount),2) AS average_amount, MIN(amount) AS minimum_amount, MAX(amount) AS maximum_amount, COUNT(payment_id) AS total_payments FROM payment
+GROUP BY payment_method;
+-----------------------------------------------15------------------------------------------------------------
+SELECT m.full_name, COUNT(p.payment_id) AS successful_payments, SUM(p.amount) AS total_amount_paid FROM member m
+JOIN membership s ON m.member_id = s.member_id
+JOIN payment p ON s.membership_id = p.membership_id
+WHERE p.payment_status = 'Successful'
+GROUP BY m.member_id, m.full_name
+HAVING COUNT(p.payment_id) >= 2
+ORDER BY total_amount_paid DESC;
+
+
